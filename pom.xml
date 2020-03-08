@@ -20,6 +20,7 @@
     </properties>
 
     <modules>
-        
+        <module>swagger-demo</module>
+        <module>mail</module>
     </modules>
 </project>
