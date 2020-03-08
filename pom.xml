@@ -22,5 +22,6 @@
     <modules>
         <module>swagger-demo</module>
         <module>mail</module>
+        <module>sms</module>
     </modules>
 </project>
