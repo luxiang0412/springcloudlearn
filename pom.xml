@@ -23,5 +23,7 @@
         <module>swagger-demo</module>
         <module>mail</module>
         <module>sms</module>
+        <module>websocket</module>
+        <module>mybatis</module>
     </modules>
 </project>

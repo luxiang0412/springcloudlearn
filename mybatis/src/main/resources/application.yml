@@ -1,0 +1,9 @@
+# DataSource Config
+spring:
+  application:
+    name: mybatis-mysql #服务名称
+  datasource:
+    url: jdbc:mysql://tx2.luxiang.info:3306/spring_cloud_learn
+    username: root
+    password: Csstsari107!
+    driver-class-name: com.mysql.cj.jdbc.Driver
