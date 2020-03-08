@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
     </properties>
 
     <modules>
@@ -25,5 +26,8 @@
         <module>sms</module>
         <module>websocket</module>
         <module>mybatis</module>
+        <module>redis</module>
+        <module>eureka-server</module>
+        <module>eureka-client1</module>
     </modules>
 </project>
