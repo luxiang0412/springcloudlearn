@@ -29,5 +29,6 @@
         <module>redis</module>
         <module>eureka-server</module>
         <module>eureka-client1</module>
+        <module>rabbitmq</module>
     </modules>
 </project>
