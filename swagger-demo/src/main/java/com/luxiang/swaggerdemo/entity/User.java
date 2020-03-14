@@ -21,11 +21,11 @@ public class User {
     private Long id;
     @Column
     @NotBlank(message = "用户名不能为空")
-    @ApiModelProperty(value = "用户名", name = "username", required = true, example = "xxxx")
+    @ApiModelProperty(value = "用户名", name = "username", required = true, example = "luxiang")
     private String username;
 
     @Column
     @NotBlank(message = "密码不能为空")
-    @ApiModelProperty(value = "密码", name = "password", required = true, example = "xxxxx")
+    @ApiModelProperty(value = "密码", name = "password", required = true, example = "luxiang1234.")
     private String password;
 }
