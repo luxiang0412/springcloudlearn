@@ -1,17 +1,13 @@
-package com.luxiang.websocket;
+package com.luxiang.jodconvert;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WebsocketApplicationTests {
+class JodconvertApplicationTests {
 
     @Test
     void contextLoads() {
-
     }
 
-    private void test(Thread thread) {
-
-    }
 }

@@ -1,0 +1,18 @@
+jodconverter:
+  local:
+    enabled: true
+    office-home: C:/Program Files (x86)/OpenOffice 4
+    port-numbers: 8100
+    max-tasks-per-process: 100
+  store:
+    path: D:/openoffice_data
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+  freemarker:
+    suffix: .html
+server:
+  servlet:
+    context-path: /

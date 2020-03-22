@@ -30,5 +30,6 @@
         <module>eureka-server</module>
         <module>eureka-client1</module>
         <module>rabbitmq</module>
+        <module>jodconvert</module>
     </modules>
 </project>
