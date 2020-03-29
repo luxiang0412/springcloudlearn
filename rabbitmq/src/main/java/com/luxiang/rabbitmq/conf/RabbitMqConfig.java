@@ -61,6 +61,12 @@ public class RabbitMqConfig {
         return new FanoutExchange(FANOUT_EXCHANGE);
     }
 
+    //  fanout 交换器
+    @Bean
+    public DirectExchange directChangeTest() {
+        return new DirectExchange("direct_change_test");
+    }
+
     //   订阅者模式绑定
     @Bean
     public Binding topExchangeBingingOne() {

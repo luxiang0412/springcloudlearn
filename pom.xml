@@ -120,6 +120,11 @@
             </dependency>
             <dependency>
                 <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-remote</artifactId>
+                <version>${jodconvert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jodconverter</groupId>
                 <artifactId>jodconverter-online</artifactId>
                 <version>${jodconverter-online}</version>
             </dependency>
