@@ -8,10 +8,7 @@ import com.luxiang.jodconvert.preview.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -71,8 +68,12 @@ public class PreviewServiceImpl implements PreviewService {
             fileName = FileUtil.getWithoutExtension(fileName);
             String targetFileExt = getTargetFileExt(fileExt);
             File targetFile = new File(storePath + FileUtil.SLASH_ONE + fileName + FileUtil.DOT + targetFileExt);
-            documentConverter.convert(in).as(DefaultDocumentFormatRegistry.getFormatByExtension(fileExt))
-                    .to(targetFile).as(DefaultDocumentFormatRegistry.getFormatByExtension(targetFileExt)).execute();
+            documentConverter
+                    .convert(in)
+                    .as(DefaultDocumentFormatRegistry.getFormatByExtension(fileExt))
+                    .to(targetFile)
+                    .as(DefaultDocumentFormatRegistry.getFormatByExtension(targetFileExt))
+                    .execute();
             fileConvertResultDTO.setStatus("success");
             fileConvertResultDTO.setTargetFileName(targetFile.getName());
         } catch (OfficeException e) {
@@ -129,13 +130,20 @@ public class PreviewServiceImpl implements PreviewService {
                         if (isRowEmpty(row)) {
                             continue;
                         }
-                        int colNum = row.getLastCellNum();
+                        int colNum = row.getPhysicalNumberOfCells();
                         float count = 0F;
                         for (int n = 0; n < colNum; n++) {
                             Cell cell = row.getCell(n);
                             if (isCellEmpty(cell)) {
                                 continue;
                             }
+                            CellStyle cellStyle = cell.getCellStyle();
+                            cellStyle.setBorderTop(BorderStyle.THIN);
+                            cellStyle.setBorderBottom(BorderStyle.THIN);
+                            cellStyle.setBorderLeft(BorderStyle.THIN);
+                            cellStyle.setBorderRight(BorderStyle.THIN);
+                            cellStyle.setWrapText(true);
+                            cell.setCellStyle(cellStyle);
                             count += sheet.getColumnWidthInPixels(cell.getColumnIndex());
                         }
                         if (count > maxWidth) {
@@ -177,6 +185,24 @@ public class PreviewServiceImpl implements PreviewService {
                 for (int i = 0; i < xlsworkbook.getNumberOfSheets(); i++) {
                     Sheet sheet = xlsworkbook.getSheetAt(i);
                     sheet.setAutobreaks(true);
+                    int rowNum = sheet.getLastRowNum();
+                    for (int j = 0; j <= rowNum; j++) {
+                        Row row = sheet.getRow(j);
+                        if (isRowEmpty(row)) {
+                            continue;
+                        }
+                        int colNum = row.getPhysicalNumberOfCells();
+                        for (int k = 0; k < colNum; k++) {
+                            Cell cell = row.getCell(k);
+                            CellStyle cellStyle = cell.getCellStyle();
+                            cellStyle.setBorderTop(BorderStyle.THIN);
+                            cellStyle.setBorderBottom(BorderStyle.THIN);
+                            cellStyle.setBorderLeft(BorderStyle.THIN);
+                            cellStyle.setBorderRight(BorderStyle.THIN);
+                            cellStyle.setWrapText(true);
+                            cell.setCellStyle(cellStyle);
+                        }
+                    }
                     outputStream = new FileOutputStream(targetFile);
                     xlsworkbook.write(outputStream);
                 }
@@ -185,17 +211,17 @@ public class PreviewServiceImpl implements PreviewService {
         } catch (Exception e) {
             //e.printStackTrace();
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
             if (xlsworkbook != null) {
                 xlsworkbook.close();
             }
             if (xlsxworkbook != null) {
                 xlsxworkbook.close();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
             }
         }
         if (targetFile.exists()) {
