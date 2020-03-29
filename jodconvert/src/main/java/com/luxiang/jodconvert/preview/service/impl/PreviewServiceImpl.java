@@ -6,6 +6,7 @@ import com.luxiang.jodconvert.preview.dto.FileConvertResultDTO;
 import com.luxiang.jodconvert.preview.service.PreviewService;
 import com.luxiang.jodconvert.preview.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -36,20 +39,25 @@ public class PreviewServiceImpl implements PreviewService {
 
     @Override
     public FileConvertResultDTO convertFile2pdf(File sourceFile, String fileExt) throws Exception {
-        officeformat(sourceFile);
         FileConvertResultDTO fileConvertResultDTO = new FileConvertResultDTO();
+        File targetFile = null;
         try {
-            fileExt = fileExt.toLowerCase();
-            String fileName = FileUtil.getWithoutExtension(sourceFile.getName());
-            String targetFileExt = getTargetFileExt(fileExt);
-            File targetFile = new File(storePath + FileUtil.SLASH_ONE + fileName + FileUtil.DOT + targetFileExt);
-            documentConverter.convert(sourceFile).as(DefaultDocumentFormatRegistry.getFormatByExtension(fileExt))
-                    .to(targetFile).as(DefaultDocumentFormatRegistry.getFormatByExtension(targetFileExt)).execute();
+            String extension = FilenameUtils.getExtension(sourceFile.getName());
+            String targetFileExt = getTargetFileExt(extension);
+            targetFile = officeformat(sourceFile);
+            File outputFile = new File(storePath + FileUtil.SLASH_ONE + (sourceFile.getName().replace(extension, targetFileExt)));
+            Objects.requireNonNull(targetFile, "file is not null");
+            documentConverter.convert(targetFile).as(DefaultDocumentFormatRegistry.getFormatByExtension(extension))
+                    .to(outputFile).as(DefaultDocumentFormatRegistry.getFormatByExtension(targetFileExt)).execute();
             fileConvertResultDTO.setStatus("success");
             fileConvertResultDTO.setTargetFileName(targetFile.getName());
         } catch (OfficeException e) {
             log.error("convertFile2pdf error : " + e.getMessage(), e);
             fileConvertResultDTO.setStatus("fail");
+        } finally {
+            if (targetFile != null && targetFile.exists()) {
+                targetFile.delete();
+            }
         }
         return fileConvertResultDTO;
 
@@ -94,20 +102,27 @@ public class PreviewServiceImpl implements PreviewService {
         }
     }
 
-    public static void officeformat(File filename) throws IOException {
-        FileInputStream fileInputStream = null;
-        OutputStream out = null;
+    public static File officeformat(File sourceFile) throws IOException {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        HSSFWorkbook xlsworkbook = null;
+        XSSFWorkbook xlsxworkbook = null;
+        Objects.requireNonNull(sourceFile, "文件为空");
+        String extension = FilenameUtils.getExtension(sourceFile.getName());
+        if (extension.equals("")) {
+            Objects.requireNonNull(sourceFile, "扩展名为空");
+            return null;
+        }
+        String targetFilePath = sourceFile.getAbsolutePath().replace(sourceFile.getName(), "tmpfile_" + UUID.randomUUID() + "_" + System.nanoTime() + "." + extension);
+        File targetFile = new File(targetFilePath);
         try {
             //获取文件类型，即文件后缀名
-            int start = filename.getAbsolutePath().length() - 4;
-            int end = filename.getAbsolutePath().length();
-            String excEnd = filename.getAbsolutePath().substring(start, end);//得到文件的后缀名
-            if (excEnd.equalsIgnoreCase("xlsx")) {
-                fileInputStream = new FileInputStream(filename);
-                XSSFWorkbook workbook1 = new XSSFWorkbook(fileInputStream);
+            if ("xlsx".equalsIgnoreCase(extension)) {
+                inputStream = new FileInputStream(sourceFile);
+                xlsxworkbook = new XSSFWorkbook(inputStream);
                 float maxWidth = 0F;
-                for (int i = 0; i < workbook1.getNumberOfSheets(); i++) {
-                    Sheet sheet = workbook1.getSheetAt(i);
+                for (int i = 0; i < xlsxworkbook.getNumberOfSheets(); i++) {
+                    Sheet sheet = xlsxworkbook.getSheetAt(i);
                     int rowNum = sheet.getLastRowNum();
                     for (int m = 0; m <= rowNum; m++) {
                         Row row = sheet.getRow(m);
@@ -152,40 +167,41 @@ public class PreviewServiceImpl implements PreviewService {
                     printSetup.setFitWidth((short) 1);//设置宽度为一页
                     //初始化
                     maxWidth = 0F;
-                    try {
-                        out = new FileOutputStream(filename);
-                        workbook1.write(out);
-                    } catch (IOException e) {
-                        //e.printStackTrace();
-                    }finally {
-                        if (workbook1 != null) {
-                            workbook1.close();
-                        }
-                    }
+                    outputStream = new FileOutputStream(targetFile);
+                    xlsxworkbook.write(outputStream);
                 }
-            } else if (excEnd.equalsIgnoreCase(".xls")) {
-                fileInputStream = new FileInputStream(filename);
-                HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
-                for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-                    Sheet sheet = workbook.getSheetAt(i);
+                xlsxworkbook.close();
+            } else if ("xls".equalsIgnoreCase(extension)) {
+                inputStream = new FileInputStream(sourceFile);
+                xlsworkbook = new HSSFWorkbook(inputStream);
+                for (int i = 0; i < xlsworkbook.getNumberOfSheets(); i++) {
+                    Sheet sheet = xlsworkbook.getSheetAt(i);
                     sheet.setAutobreaks(true);
-                    try {
-                        workbook.write(new FileOutputStream(filename));
-                    } catch (IOException e) {
-                        //e.printStackTrace();
-                    }
+                    outputStream = new FileOutputStream(targetFile);
+                    xlsworkbook.write(outputStream);
                 }
-                workbook.close();
+                xlsworkbook.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally {
-            if (fileInputStream != null) {
-                fileInputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
             }
-            if (out != null) {
-                out.close();
+            if (outputStream != null) {
+                outputStream.close();
             }
+            if (xlsworkbook != null) {
+                xlsworkbook.close();
+            }
+            if (xlsxworkbook != null) {
+                xlsxworkbook.close();
+            }
+        }
+        if (targetFile.exists()) {
+            return targetFile;
+        } else {
+            return sourceFile;
         }
     }
 

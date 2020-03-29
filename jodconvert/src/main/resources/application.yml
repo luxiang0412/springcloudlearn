@@ -5,7 +5,7 @@ jodconverter:
     port-numbers: 8100
     max-tasks-per-process: 100
   store:
-    path: D:/openoffice_data
+    path: D:/jodconvert_test
 spring:
   servlet:
     multipart:
