@@ -5,10 +5,13 @@ import com.luxiang.jodconvert.preview.dto.FileConvertResultDTO;
 import com.luxiang.jodconvert.preview.service.PreviewService;
 import com.luxiang.jodconvert.preview.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLConnection;
 
 @RestController
@@ -137,7 +142,20 @@ public class PreviewController {
     public void convertFile(String path,
                             @RequestParam(value = "fileExt", required = false) String fileExt) throws Exception {
         File file = new File(path);
-        previewService.convertFile2pdf(file,fileExt);
+        previewService.convertFile2pdf(file, fileExt);
     }
 
+
+    @GetMapping(value = "/pdf", produces = "application/pdf;charset=UTF-8")
+    public ResponseEntity<byte[]> file(String path) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        File file = new File(path);
+        InputStream in = new FileInputStream(file);
+        byte[] media = IOUtils.toByteArray(in);
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.add("content-disposition", "inline;filename=" + file.getName());
+        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(
+                media, headers, HttpStatus.OK);
+        return response;
+    }
 }

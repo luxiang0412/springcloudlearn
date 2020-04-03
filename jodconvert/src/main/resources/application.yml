@@ -1,7 +1,7 @@
 jodconverter:
   local:
     enabled: true
-    office-home: C:/Program Files (x86)/OpenOffice 4
+    office-home: C:/Program Files/LibreOffice
     port-numbers: 8100
     max-tasks-per-process: 100
   store:
@@ -16,3 +16,4 @@ spring:
 server:
   servlet:
     context-path: /
+  port: 8081

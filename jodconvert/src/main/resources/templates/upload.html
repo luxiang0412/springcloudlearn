@@ -25,42 +25,48 @@
 <div class="centerEle">
     <div class="form-group col-md-3  mb-2">
         <form id="fileForm" enctype="multipart/form-data">
-        <input type="text" name="viewfile" id="viewfile" placeholder="未选择文件" disabled autocomplete="off" class="form-control">
-        <input type="file" name="file" style="display: none" onchange="reShow();" id="upload"/>
+            <input type="text" name="viewfile" id="viewfile" placeholder="未选择文件" disabled autocomplete="off"
+                   class="form-control">
+            <input type="file" name="file" style="display: none" onchange="reShow();" id="upload"/>
         </form>
 
     </div>
+    <label class="btn btn-primary  mb-2" id="test" style="cursor:pointer;" onclick="pdf()">测试</label>
     <label class="btn btn-primary  mb-2" for="upload" style="cursor:pointer;">浏览</label>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <label class="btn btn-secondary  mb-2" style="cursor:pointer;" onclick="submit()">上传</label>
 </div>
 </body>
 <script type="text/javascript">
-  function reShow() {
-    document.getElementById('viewfile').value = document.getElementById('upload').value;
-  }
-
-  function submit(){
-    var viewfile = $("#viewfile").val();
-    if(viewfile == "") {
-      alert("文件名不能为空");
-      return;
+    function pdf() {
+        window.open('/preview/pdf?path=D:%5Cjodconvert_test%5Caa.pdf')
     }
-      $("#fileForm").ajaxSubmit({
-        type : "POST",
-        url : "/upload",
-        success : function(data) {
-          if(data.status == 0){
-            alert("文件上传预览解析成功!")
-            window.location.href = "/toPreview?fileName="+data.data;
-          }else{
-            alert("文件上传预览解析失败!")
-          }
+
+    function reShow() {
+        document.getElementById('viewfile').value = document.getElementById('upload').value;
+    }
+
+    function submit() {
+        var viewfile = $("#viewfile").val();
+        if (viewfile == "") {
+            alert("文件名不能为空");
+            return;
         }
-      });
+        $("#fileForm").ajaxSubmit({
+            type: "POST",
+            url: "/upload",
+            success: function (data) {
+                if (data.status == 0) {
+                    alert("文件上传预览解析成功!")
+                    window.location.href = "/toPreview?fileName=" + data.data;
+                } else {
+                    alert("文件上传预览解析失败!")
+                }
+            }
+        });
 
 
-  }
+    }
 </script>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.form.js"></script>
