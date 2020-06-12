@@ -21,6 +21,7 @@ class MailApplicationTests {
     @Test
     void contextLoads() {
         try {
+            JavaMailSenderImpl mailSender1 = new JavaMailSenderImpl();
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("测试");

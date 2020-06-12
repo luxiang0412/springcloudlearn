@@ -100,6 +100,14 @@ public class MqTest implements RabbitTemplate.ConfirmCallback, RabbitTemplate.Re
     }
 
     @RabbitListener(bindings = {
+            @QueueBinding(value = @Queue(value = "jenkins_pipeline_callback", durable = "true"),
+                    exchange = @Exchange(value = "amq.direct"),
+                    key = "jenkins_pipeline_callback")})
+    public void jenkinsPipelineCallback(String msg) {
+        log.info("接收到topic_routing_key_two消息:{}", msg);
+    }
+
+    @RabbitListener(bindings = {
             @QueueBinding(value = @Queue(value = "topic_queue02", durable = "true"),
                     exchange = @Exchange(value = "topic_exchange", type = ExchangeTypes.TOPIC),
                     key = "routing_key_two")})
