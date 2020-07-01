@@ -1,5 +1,8 @@
 package com.luxiang.swagger3.springdoc.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 /**
  * @author luxiang
  * description  //TODO
