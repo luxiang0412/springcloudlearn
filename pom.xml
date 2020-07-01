@@ -27,6 +27,7 @@
         <module>rabbitmq</module>
         <module>jodconvert</module>
         <module>mongo</module>
+        <module>swagger3</module>
     </modules>
 
     <properties>
