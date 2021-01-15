@@ -4,7 +4,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:mysql://tx2.luxiang.info:3306/springcloudlearn
+    url: jdbc:mysql://tx2.luxiang.info:3306/springbootlearn
     username: root
     password: Csstsari107!
     driver-class-name: com.mysql.cj.jdbc.Driver

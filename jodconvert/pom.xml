@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.luxiang</groupId>
-        <artifactId>springcloudlearn</artifactId>
+        <artifactId>springbootlearn</artifactId>
         <version>0.0.1</version>
     </parent>
     <artifactId>jodconvert</artifactId>

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.luxiang</groupId>
-    <artifactId>springcloudlearn</artifactId>
+    <artifactId>springbootlearn</artifactId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
-    <name>springcloudlearn</name>
+    <name>springbootlearn</name>
     <description>spring cloud learn</description>
 
     <modules>
