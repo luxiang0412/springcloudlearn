@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 
 @Data
 @Entity
@@ -15,17 +13,14 @@ public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Null(message = "id必须为空")
     @ApiModelProperty(value = "用户ID", name = "id")
 
     private Long id;
     @Column
-    @NotBlank(message = "用户名不能为空")
     @ApiModelProperty(value = "用户名", name = "username", required = true, example = "luxiang")
     private String username;
 
     @Column
-    @NotBlank(message = "密码不能为空")
     @ApiModelProperty(value = "密码", name = "password", required = true, example = "luxiang1234.")
     private String password;
 }
