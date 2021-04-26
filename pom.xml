@@ -40,7 +40,7 @@
         <lombok.version>1.18.12</lombok.version>
         <jodconverter-online>4.2.4</jodconverter-online>
         <openoffice.version>4.1.2</openoffice.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <tika.version>1.22</tika.version>
         <mybatis-plus.version>3.1.0</mybatis-plus.version>
