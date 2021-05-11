@@ -30,6 +30,7 @@
         <module>swagger3</module>
         <module>okhttp-demo</module>
         <module>kafka</module>
+        <module>rocketmq</module>
     </modules>
 
     <properties>
