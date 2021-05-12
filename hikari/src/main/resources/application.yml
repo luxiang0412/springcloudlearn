@@ -1,0 +1,16 @@
+# DataSource Config
+spring:
+  application:
+    name: hikari #服务名称
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:20004/dataplatform_test?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    username: gpadmin
+    password: pivotal
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 20
+      idle-timeout: 500000
+      max-lifetime: 540000
+      connection-timeout: 60000
+      connection-test-query: SELECT 1

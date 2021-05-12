@@ -1,0 +1,6 @@
+select pg_terminate_backend('5117');
+select pg_terminate_backend('5118');
+select pg_terminate_backend('29185');
+select pg_terminate_backend('8322');
+select pg_terminate_backend('8323');
+select pg_terminate_backend('6376');
